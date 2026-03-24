@@ -1,5 +1,3 @@
-#include <iostream>
-
 /*
 	Go to Project -> Properties and ensure:
 		Configuration: Active(Debug)											----> Change dependent on Conifg Type
@@ -11,10 +9,25 @@
 
 	Go to Project -> Properties -> Config Properties -> Debugging and ensure:
 		Working Directory: $(ProjectDir)										----> Change dependent on main working directory
+
+
+	Project Description (Phase 1):
+		Listen for incoming connections, receive raw request data, parse it,
+		match it to predefined routes, and send back a formatted HTTP response.
+
+	main.cpp to:
+		1. create server object
+		2. configure port/address
+		3. start server
 */
 
-int main() {
-	std::cout << "Server starting...\n";
+#include "../include/Server.h"
+#include "../include/CommonIncludes.h"
+
+int main()
+{
+	Server server(8080, "127.0.0.1", 10);
+	server.start();
 
 	return 0;
 }
