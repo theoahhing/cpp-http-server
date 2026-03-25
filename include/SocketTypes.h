@@ -3,6 +3,9 @@
 #ifndef SOCKETTYPES_H
 #define SOCKETTYPES_H
 
+#include <iostream>
+#include <string>
+
 #if defined(__linux__) || defined(__unix__)
 
 #include <sys/socket.h>
@@ -29,5 +32,19 @@ constexpr SocketHandle INVALID_SOCKET_HANDLE = -1;
 using SocketHandle = SOCKET; // #define SOCKET SocketHandle
 constexpr SocketHandle INVALID_SOCKET_HANDLE = INVALID_SOCKET;
 #endif
+
+// ================================
+// Utility Helpers
+// ================================
+
+namespace util {
+    inline std::string GetLastSocketError() {
+#ifdef _WIN32
+        return std::to_string(WSAGetLastError());
+#else
+        return std::strerror(errno);
+#endif
+    }
+}
 
 #endif // SOCKETTYPES_H

@@ -5,6 +5,7 @@
 
 #include "SocketTypes.h"
 #include "CommonIncludes.h"
+#include "HttpParser.h"
 
 class Connection
 {

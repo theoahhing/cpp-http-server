@@ -216,7 +216,7 @@ void Server::runAcceptLoop(void)
 
         char ipBuffer[INET_ADDRSTRLEN] = { 0 };
         if (inet_ntop(AF_INET, &(clientAddress.sin_addr), ipBuffer, INET_ADDRSTRLEN) == nullptr) {
-            std::strcpy(ipBuffer, "Unknown");
+            strcpy_s(ipBuffer,sizeof(ipBuffer), "Unknown");
         }
 
         std::cout << "Accepted connection from "
@@ -235,6 +235,10 @@ void Server::runAcceptLoop(void)
             if (bytesReceived <= 0) {
                 break;
             }
+
+            std::cout << "Received " << bytesReceived << " bytes:\n";
+            std::cout.write(buffer, bytesReceived);
+            std::cout << "\n\n";
 
             int bytesSent = connection.writeBytes(buffer, bytesReceived);
 

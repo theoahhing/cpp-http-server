@@ -15,7 +15,6 @@
     header files removed from original:
         - #include <thread>
         - #include <future>
-        - #include <map>
         - #include <mutex>
         - #include <condition_variable>
         - #include <chrono>
@@ -27,6 +26,7 @@
 #include <iomanip>
 #include <istream>
 #include <string>
+#include <map>
 #include <cstring>
 #include <cstdint>
 #include <vector>
@@ -35,6 +35,9 @@
 #include <numeric>
 #include <utility>
 #include <cerrno>
+#include <cctype>
+#include <cstddef>
+#include <algorithm>
 
 
 // ================================
@@ -76,21 +79,5 @@ namespace config {
     constexpr int BUFFER_SIZE = 4096;
     constexpr const char* DEFAULT_IP_ADDRESS = "127.0.0.1";
 }
-
-// ================================
-// Utility Helpers
-// ================================
-
-namespace util {
-    inline std::string getLastError() {
-#ifdef _WIN32
-        return std::to_string(WSAGetLastError());
-#else
-        return std::strerror(errno);
-#endif
-    }
-}
-
-
 
 #endif
