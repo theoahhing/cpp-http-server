@@ -14,6 +14,23 @@
 	Project Description (Phase 1):
 		Listen for incoming connections, receive raw request data, parse it,
 		match it to predefined routes, and send back a formatted HTTP response.
+	
+	Runtime Pipeline:
+		1. Socket accepts client
+		2. Connection reads raw data
+		3. HttpParser converts raw text into Request
+		4. Router picks handler using Request
+		5. Handler creates Response
+		6. Response serializes to HTTP
+		7. Connection sends it back.
+
+	Design Philosophy:
+		1. Server class
+		2. Connection class
+		3. HttpParser namespace
+		4. Request struct
+		5. Response struct (maybe class)
+		6. Router class
 
 	main.cpp to:
 		1. create server object

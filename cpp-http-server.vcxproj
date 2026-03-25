@@ -139,6 +139,7 @@
     <ClInclude Include="include\CommonIncludes.h" />
     <ClInclude Include="include\Connection.h" />
     <ClInclude Include="include\Server.h" />
+    <ClInclude Include="include\SocketTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
