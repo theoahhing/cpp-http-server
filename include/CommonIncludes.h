@@ -52,21 +52,19 @@
 // Type Aliases
 // ================================
 
-#define byte		uint8_t
-#define leastByte	uint_least8_t
-#define fastByte	uint_fast8_t
+using byte          = uint8_t;
+using leastByte     = uint_least8_t;
+using fastByte      = uint_fast8_t;
+using word          = uint16_t;
+using leastWord     = uint_least16_t;
+using fastWord      = uint_fast16_t;
+using dword         = uint32_t;
+using leastDWord    = uint_least32_t;
+using fastDWord     = uint_fast32_t;
+using qword         = uint64_t;
+using leastQWord    = uint_least64_t;
+using fastQWord     = uint_fast64_t;
 
-#define word		uint16_t
-#define leastWord	uint_least16_t
-#define fastWord	uint_fast16_t
-
-#define dword		uint32_t
-#define leastDWord	uint_least32_t
-#define fastDWord	uint_fast32_t
-
-#define qword		uint64_t
-#define leastQWord	uint_least64_t
-#define fastQWord	uint_fast64_t
 
 // ================================
 // Global Config
