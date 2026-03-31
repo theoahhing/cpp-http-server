@@ -135,6 +135,7 @@
     <ClCompile Include="src\HttpParser.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Request.cpp" />
+    <ClCompile Include="src\Response.cpp" />
     <ClCompile Include="src\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +143,7 @@
     <ClInclude Include="include\Connection.h" />
     <ClInclude Include="include\HttpParser.h" />
     <ClInclude Include="include\Request.h" />
+    <ClInclude Include="include\Response.h" />
     <ClInclude Include="include\Server.h" />
     <ClInclude Include="include\SocketTypes.h" />
   </ItemGroup>

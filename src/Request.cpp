@@ -7,6 +7,7 @@ Request::Request()
     headers(),
     body("")
 {
+
 }
 
 void Request::reset()
