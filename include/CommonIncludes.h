@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <istream>
 #include <string>
+#include <functional>
 #include <map>
 #include <cstring>
 #include <cstdint>
