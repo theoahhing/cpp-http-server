@@ -1,12 +1,11 @@
-/*
-	This Connection file has the following responsibilities:
-		- Store client socket handle
-		- Read incoming bytes
-		- Write outgoing bytes
-		- close socket
-*/
-
 #include "../include/Connection.h"
+
+/*=====================================================================================
+
+    CONSTRUCTOR:
+        Sets all members to safe defaults.
+
+======================================================================================*/
 
 Connection::Connection(SocketHandle socketHandle, const sockaddr_in& address)
     : clientSocket(socketHandle),
@@ -29,10 +28,24 @@ Connection::Connection(SocketHandle socketHandle, const sockaddr_in& address)
     isConnected = (clientSocket != INVALID_SOCKET_HANDLE);
 }
 
+/*=====================================================================================
+
+    DESTRUCTOR:
+        Stop connection.
+
+======================================================================================*/
+
 Connection::~Connection(void)
 {
     stop();
 }
+
+/*=====================================================================================
+
+    READ BYTES FUNCTION:
+        Read the bytes.
+
+======================================================================================*/
 
 int Connection::readBytes(char* buffer, int length)
 {
@@ -49,6 +62,13 @@ int Connection::readBytes(char* buffer, int length)
     return bytesReceived;
 }
 
+/*=====================================================================================
+
+    WRITE BYTES FUNCTION:
+        Write bytes.
+
+======================================================================================*/
+
 int Connection::writeBytes(const char* data, int length)
 {
     if (data == nullptr || length <= 0 || clientSocket == INVALID_SOCKET_HANDLE) {
@@ -64,6 +84,13 @@ int Connection::writeBytes(const char* data, int length)
     return bytesSent;
 }
 
+/*=====================================================================================
+
+    STOP FUNCTION:
+        Stop connection.
+
+======================================================================================*/
+
 void Connection::stop(void)
 {
     if (clientSocket == INVALID_SOCKET_HANDLE) {
@@ -75,30 +102,72 @@ void Connection::stop(void)
     closeClientSocket();
 }
 
+/*=====================================================================================
+
+    IS VALID FUNCTION:
+        Checks to see whether socket handle is valid.
+
+======================================================================================*/
+
 bool Connection::isValid(void) const
 {
     return (clientSocket != INVALID_SOCKET_HANDLE);
 }
+
+/*=====================================================================================
+
+    IS ACTIVE FUNCTION:
+        Checks to see whether connection is active.
+
+======================================================================================*/
 
 bool Connection::isActive(void) const
 {
     return isConnected;
 }
 
+/*=====================================================================================
+
+    GET HANDLE FUNCTION:
+        Returns the client socket handle.
+
+======================================================================================*/
+
 SocketHandle Connection::getHandle(void) const
 {
     return clientSocket;
 }
+
+/*=====================================================================================
+
+    GET IP ADDRESS FUNCTION:
+        Returns the IP Address.
+
+======================================================================================*/
 
 std::string Connection::getIpAddress(void) const
 {
     return ipAddress;
 }
 
+/*=====================================================================================
+
+    GET PORT FUNCTION:
+        Returns the port.
+
+======================================================================================*/
+
 unsigned short Connection::getPort(void) const
 {
     return port;
 }
+
+/*=====================================================================================
+
+    CLOSE CLIENT SOCKET FUNCTION:
+        Close the socket.
+
+======================================================================================*/
 
 void Connection::closeClientSocket(void)
 {

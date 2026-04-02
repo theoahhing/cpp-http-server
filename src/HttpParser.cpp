@@ -2,9 +2,12 @@
 
 namespace HttpParser
 {
-    // ================================
-    // Constructor
-    // ================================
+    /*=====================================================================================
+
+        CONSTRUCTOR:
+            Sets all members to safe defaults.
+
+    ======================================================================================*/
 
     Parser::Parser()
         : state(ParseState::RequestLine),
@@ -14,12 +17,14 @@ namespace HttpParser
           parsedBytes(0),
           errorFlag(false)
     {
-
     }
 
-    // ================================
-    // Public Methods
-    // ================================
+    /*=====================================================================================
+
+        APPEND DATA FUNCTION:
+            Appends data to buffer.
+
+    ======================================================================================*/
 
     void Parser::appendData(const char* data, std::size_t size)
     {
@@ -29,6 +34,13 @@ namespace HttpParser
 
         buffer.append(data, size);
     }
+
+    /*=====================================================================================
+
+        ENUM CLASS PARSE RESULT FUNCTION:
+            Set parse state.
+
+    ======================================================================================*/
 
     ParseResult Parser::parse()
     {
@@ -85,34 +97,66 @@ namespace HttpParser
         return ParseResult::InProgress;
     }
 
+    /*=====================================================================================
+
+        IS COMPLETE FUNCTION:
+            Checks to see if parse is complete.
+
+    ======================================================================================*/
+
     bool Parser::isComplete() const
     {
         return state == ParseState::Complete;
     }
+
+    /*=====================================================================================
+
+        HAS ERROR FUNCTION:
+            Checks to see if there is an error with parsing.
+
+    ======================================================================================*/
 
     bool Parser::hasError() const
     {
         return state == ParseState::Error || errorFlag;
     }
 
+    /*=====================================================================================
+
+        GET REQUEST FUNCTION:
+            Returns request.
+
+    ======================================================================================*/
+
     const Request& Parser::getRequest() const
     {
         return request;
     }
 
+    /*=====================================================================================
+
+        RESET FUNCTION:
+            Clears all members.
+
+    ======================================================================================*/
+
     void Parser::reset()
     {
         state = ParseState::RequestLine;
         buffer.clear();
-        request = Request{};
+        request.reset();
         contentLength = 0;
         parsedBytes = 0;
         errorFlag = false;
     }
 
-    // ================================
-    // Private Parsing Helpers
-    // ================================
+    /*=====================================================================================
+
+        PARSE REQUEST LINE FUNCTION:
+            Parse the data for request line.
+
+    ======================================================================================*/
+
     bool Parser::parseRequestLine()
     {
         const std::size_t lineEnd = findCRLF(buffer, parsedBytes);
@@ -122,7 +166,7 @@ namespace HttpParser
         }
 
         const std::string line = buffer.substr(parsedBytes, lineEnd - parsedBytes);
-        parsedBytes = lineEnd + 2; // Skip \r\n
+        parsedBytes = lineEnd + 2;
 
         std::istringstream iss(line);
 
@@ -132,14 +176,12 @@ namespace HttpParser
             return false;
         }
 
-        // Basic validation
         if (request.method.empty() || request.path.empty() || request.version.empty()) {
             errorFlag = true;
             state = ParseState::Error;
             return false;
         }
 
-        // Optional: basic HTTP version sanity check
         if (request.version.rfind("HTTP/", 0) != 0) {
             errorFlag = true;
             state = ParseState::Error;
@@ -150,6 +192,13 @@ namespace HttpParser
         return true;
     }
 
+    /*=====================================================================================
+
+        PARSE HEADERS FUNCTION:
+            Parse the data for headers.
+
+    ======================================================================================*/
+
     bool Parser::parseHeaders()
     {
         while (true) {
@@ -159,11 +208,10 @@ namespace HttpParser
                 return false;
             }
 
-            // Empty line means end of headers
             if (lineEnd == parsedBytes) {
-                parsedBytes += 2; // Skip final \r\n
+                parsedBytes += 2;
 
-                auto it = request.headers.find("Content-Length");
+                auto it = request.headers.find("content-length");
                 if (it != request.headers.end()) {
                     try {
                         contentLength = static_cast<std::size_t>(std::stoul(it->second));
@@ -189,7 +237,7 @@ namespace HttpParser
             }
 
             const std::string line = buffer.substr(parsedBytes, lineEnd - parsedBytes);
-            parsedBytes = lineEnd + 2; // Skip \r\n
+            parsedBytes = lineEnd + 2;
 
             const std::size_t colonPos = line.find(':');
             if (colonPos == std::string::npos) {
@@ -222,9 +270,18 @@ namespace HttpParser
                 return false;
             }
 
+            key = normalizeHeaderKey(key);
+
             request.headers[key] = value;
         }
     }
+
+    /*=====================================================================================
+
+        PARSE BODY FUNCTION:
+            Parse the data for body.
+
+    ======================================================================================*/
 
     bool Parser::parseBody()
     {
@@ -241,16 +298,46 @@ namespace HttpParser
         return true;
     }
 
-    // ================================
-    // Utility Helpers
-    // ================================
+    /*=====================================================================================
+
+        FIND CRLF FUNCTION:
+            Find carriage return + line feed used to mark the end of a line of text.
+
+    ======================================================================================*/
+
     std::size_t Parser::findCRLF(const std::string& str, std::size_t start) const
     {
         return str.find("\r\n", start);
     }
 
+    /*=====================================================================================
+
+        FIND DOUBLE CRLF FUNCTION:
+            Find double carriage return + line feed used to mark the end of a line of text.
+
+    ======================================================================================*/
+
     std::size_t Parser::findDoubleCRLF(const std::string& str) const
     {
         return str.find("\r\n\r\n");
+    }
+
+    /*=====================================================================================
+
+        NORMALIZE HEADER KEY FUNCTION:
+            Handles case-sensitivity.
+
+    ======================================================================================*/
+
+    std::string Parser::normalizeHeaderKey(const std::string& key) const
+    {
+        std::string normalized = key;
+
+        std::transform(normalized.begin(), normalized.end(), normalized.begin(),
+            [](unsigned char ch) {
+                return static_cast<char>(std::tolower(ch));
+            });
+
+        return normalized;
     }
 }

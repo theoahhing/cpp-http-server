@@ -1,5 +1,4 @@
 #pragma once
-
 /*
     The request file is to identify what the client is wanting to do. The common HTTP methods are:
         - GET: Retrieve something
@@ -11,7 +10,6 @@
         - OPTIONS: Asks what methods are allowed
         - TRACE: Diagnostic, usually ignored or disabled
         - CONNECT: Mainly for proxies or tunnels
-
     
 */
 
@@ -31,10 +29,13 @@ struct Request
     Request();
 
     void reset();
+
     bool hasHeader(const std::string& key) const;
     std::string getHeader(const std::string& key) const;
-};
 
+private:
+    static std::string normalizeHeaderKey(const std::string& key);
+};
 
 
 #endif // _REQUEST_H

@@ -1,10 +1,16 @@
 #pragma once
+/*
+    This Connection file has the following responsibilities:
+        - Store client socket handle
+        - Read incoming bytes
+        - Write outgoing bytes
+        - close socket
+*/
 
 #ifndef _CONNECTION_H
 #define _CONNECTION_H
 
 #include "SocketTypes.h"
-#include "CommonIncludes.h"
 #include "HttpParser.h"
 
 class Connection
